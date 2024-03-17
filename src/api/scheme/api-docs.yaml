@@ -1,0 +1,227 @@
+openapi: 3.1.0
+x-stoplight:
+  id: r6f728qnqhpum
+info:
+  title: 経費管理API
+  version: '1.0'
+  summary: 経費管理API
+  description: 企業の経費管理用のAPI
+servers:
+  - url: 'http://localhost:8080'
+    description: ''
+paths:
+  '/api/form-settings/{companyId}':
+    parameters:
+      - schema:
+          type: string
+        name: companyId
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  Example 1:
+                    isRequiredTitle: true
+                required:
+                  - isRequiredTitle
+                properties:
+                  isRequiredTitle:
+                    type: boolean
+              examples:
+                Example 1:
+                  value:
+                    isRequiredTitle: true
+        4XX:
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Example 1:
+                  value:
+                    message: Bad Request
+        5XX:
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Example 1:
+                  value:
+                    message: Internal Server Error
+      operationId: get-api-form-settings-companyId
+      x-stoplight:
+        id: gwro2bdzyaak3
+      description: フォーム設定取得 API
+  /api/expense-categories:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  Example 1:
+                    categories:
+                      - id: '1'
+                        name: 交通費
+                        validationRule:
+                          maxAmount: '5000'
+                          isRequiredPayee: 'false'
+                      - id: '2'
+                        name: 食費
+                        validationRule:
+                          maxAmount: '3000'
+                          isRequiredPayee: 'true'
+                required:
+                  - categories
+                properties:
+                  categories:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Category'
+                      x-stoplight:
+                        id: p1cns25qfdj44
+              examples:
+                Example 1:
+                  value:
+                    categories:
+                      - id: 1
+                        name: 会食費
+                        rules:
+                          price:
+                            maxAmount: 5000
+                      - id: 2
+                        name: 交通費
+                        rules: {}
+                      - id: 3
+                        name: 弁護士費
+                        rules:
+                          payee:
+                            isRequired: true
+        4XX:
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Example 1:
+                  value:
+                    message: Bad Request
+        5XX:
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Example 1:
+                  value:
+                    message: Internal Server Error
+      operationId: get-api-expense-categories
+      x-stoplight:
+        id: 228tsf4uqghqi
+      description: 内訳一覧取得 API
+components:
+  schemas:
+    Category:
+      type: object
+      x-examples:
+        Example 1:
+          id: '1'
+          name: 交通費
+          validationRule:
+            maxAmount: '5000'
+            isRequiredPayee: 'false'
+      x-stoplight:
+        id: fo3ztaic1m5p8
+      examples:
+        - id: 1
+          name: 会食費
+          rules:
+            price:
+              maxAmount: 5000
+        - id: 2
+          name: 会食費
+          rules: {}
+        - id: 3
+          name: 弁護士費
+          rules:
+            payee:
+              isRequired: true
+      required:
+        - id
+        - name
+        - rules
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        rules:
+          x-stoplight:
+            id: wudt9553himw6
+          type: object
+          properties:
+            price:
+              $ref: '#/components/schemas/ValidationRule'
+              x-stoplight:
+                id: u90py69kcwph1
+            payee:
+              $ref: '#/components/schemas/ValidationRule'
+              x-stoplight:
+                id: tp823yhcuz2j2
+            date:
+              $ref: '#/components/schemas/ValidationRule'
+              x-stoplight:
+                id: hl8ixtscvqx7p
+    ValidationRule:
+      type: object
+      x-examples:
+        Example 1:
+          payee:
+            isRequired: 'true'
+      examples:
+        - isRequired: true
+          minAmount: 0
+          maxAmount: 5000
+      properties:
+        isRequired:
+          type: boolean
+          x-stoplight:
+            id: okcxwn6q0wivl
+        minAmount:
+          type: number
+          x-stoplight:
+            id: bxuu3uoonqeb2
+        maxAmount:
+          type: number
+          x-stoplight:
+            id: jbjqzxofyp2ot
+    Error:
+      title: Error
+      x-stoplight:
+        id: h3bh584j2zz7y
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          x-stoplight:
+            id: j2ea5kgozs540
